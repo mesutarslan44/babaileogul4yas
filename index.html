@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Baba ve 4 yaşındaki oğlu için rastgele, eğlenceli ve öğretici oyun fikirleri üreten harika bir asistan." />
+  <title>Baba & Oğul 4 Yaş - Harika Oyun Fikirleri</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Arka plan animasyon objeleri -->
+  <div class="bg-shape shape-1"></div>
+  <div class="bg-shape shape-2"></div>
+  <div class="bg-shape shape-3"></div>
+
+  <main class="app">
+    <header class="hero">
+      <p class="eyebrow">4 Yaş Baba - Oğul Oyun Kutusu</p>
+      <h1>Aç, Oyna, Gülüş Topla 🚀</h1>
+      <p class="hero-copy">Her açılışta çocuğunla hemen oynayabileceğin interaktif ve eğlenceli yeni bir oyun fikri!</p>
+    </header>
+
+    <section class="controls">
+      <label>
+        Süre
+        <select id="durationFilter">
+          <option value="all">Hepsi</option>
+          <option value="5">5 dk</option>
+          <option value="15">15 dk</option>
+          <option value="30">30 dk</option>
+        </select>
+      </label>
+      <label>
+        Ortam
+        <select id="placeFilter">
+          <option value="all">Hepsi</option>
+          <option value="ev">Ev içi</option>
+          <option value="disari">Dışarı</option>
+        </select>
+      </label>
+      <label>
+        Malzeme
+        <select id="materialFilter">
+          <option value="all">Hepsi</option>
+          <option value="yok">Malzemesiz</option>
+          <option value="var">Malzemeli</option>
+        </select>
+      </label>
+    </section>
+
+    <section class="game-card" id="gameCard">
+      <div class="badges">
+        <span id="durationBadge">-- dk</span>
+        <span id="placeBadge">--</span>
+        <span id="materialBadge">--</span>
+      </div>
+      <h2 id="gameTitle">Oyun yükleniyor...</h2>
+      <p class="skill" id="gameSkill">Beceri: --</p>
+      <ol id="gameSteps">
+        <li>Yükleniyor...</li>
+      </ol>
+      <div class="safety" id="gameSafety">Güvenlik notu: --</div>
+    </section>
+
+    <section class="actions">
+      <button id="randomBtn" class="primary">🎲 Yeni Oyun Getir</button>
+      <button id="easyModeBtn" class="ghost">💤 Baba Yorgun Modu</button>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
