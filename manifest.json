@@ -1,0 +1,17 @@
+{
+  "name": "Baba & Oğul 4 Yaş",
+  "short_name": "BabaOğul",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffecd2",
+  "theme_color": "#ff8a2a",
+  "description": "Her açılışta 4 yaşındaki çocuğunla oynayabileceğin anında yeni bir oyun fikri!",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

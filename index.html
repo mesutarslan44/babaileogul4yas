@@ -2,16 +2,25 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="description" content="Baba ve 4 yaşındaki oğlu için rastgele, eğlenceli ve öğretici oyun fikirleri üreten harika bir asistan." />
+  
+  <!-- PWA ve İkon Tanımları -->
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <meta name="theme-color" content="#ff8a2a" />
+  <link rel="apple-touch-icon" href="icon.svg">
+  
   <title>Baba & Oğul 4 Yaş - Harika Oyun Fikirleri</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
+  
+  <!-- Confetti Kütüphanesi -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
-  <!-- Arka plan animasyon objeleri -->
   <div class="bg-shape shape-1"></div>
   <div class="bg-shape shape-2"></div>
   <div class="bg-shape shape-3"></div>
@@ -49,9 +58,17 @@
           <option value="var">Malzemeli</option>
         </select>
       </label>
+      <label>
+        Özel
+        <select id="favoriteFilter">
+          <option value="all">Hepsi</option>
+          <option value="fav">⭐ Sadece Favoriler</option>
+        </select>
+      </label>
     </section>
 
     <section class="game-card" id="gameCard">
+      <button id="favBtn" class="fav-btn" aria-label="Favoriye Ekle">🤍</button>
       <div class="badges">
         <span id="durationBadge">-- dk</span>
         <span id="placeBadge">--</span>
