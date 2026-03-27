@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="description" content="Baba ve 4 yaşındaki oğlu için rastgele, eğlenceli ve öğretici oyun fikirleri üreten harika bir asistan." />
   
-  <!-- PWA ve İkon Tanımları -->
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
   <meta name="theme-color" content="#ff8a2a" />
@@ -17,7 +16,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
   
-  <!-- Confetti Kütüphanesi -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
@@ -31,6 +29,10 @@
       <h1>Aç, Oyna, Gülüş Topla 🚀</h1>
       <p class="hero-copy">Her açılışta çocuğunla hemen oynayabileceğin interaktif ve eğlenceli yeni bir oyun fikri!</p>
     </header>
+
+    <section class="search-bar-container">
+      <input type="text" id="searchInput" class="search-input" placeholder="Hangi oyunu arıyorsun? (Örn: top, araba)..." autocomplete="off" />
+    </section>
 
     <section class="controls">
       <label>
@@ -63,12 +65,17 @@
         <select id="favoriteFilter">
           <option value="all">Hepsi</option>
           <option value="fav">⭐ Sadece Favoriler</option>
+          <option value="unplayed">🆕 Oynanmamışlar</option>
         </select>
       </label>
     </section>
 
     <section class="game-card" id="gameCard">
-      <button id="favBtn" class="fav-btn" aria-label="Favoriye Ekle">🤍</button>
+      <div class="card-top-actions">
+        <button id="shareBtn" class="action-btn" aria-label="Whatsapp'ta Paylaş">📤</button>
+        <button id="favBtn" class="action-btn fav-btn-icon" aria-label="Favoriye Ekle">🤍</button>
+      </div>
+
       <div class="badges">
         <span id="durationBadge">-- dk</span>
         <span id="placeBadge">--</span>
@@ -79,7 +86,15 @@
       <ol id="gameSteps">
         <li>Yükleniyor...</li>
       </ol>
+      
+      <div id="gameTimer" class="timer-display">
+        <span id="timeText" class="time-text">--:--</span>
+        <button id="timerBtn" class="timer-play-btn">▶️ Başlat</button>
+      </div>
+
       <div class="safety" id="gameSafety">Güvenlik notu: --</div>
+
+      <button id="playedBtn" class="played-btn">✅ Bu Oyunu Oynadık!</button>
     </section>
 
     <section class="actions">
