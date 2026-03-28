@@ -193,6 +193,39 @@ function normalizeText(value) {
     .trim();
 }
 
+function inferFatherRole(game) {
+  const title = String(game.title || "").toLowerCase();
+  if (title.includes("saklamba") || title.includes("hazine") || title.includes("define")) {
+    return "Oyunu kurar, ipucu verir, cocugu guvenli sekilde yonlendirir.";
+  }
+  if (game.material === "var") {
+    return "Malzemeleri hazirlar, ilk turu gosterir, tempoyu cocuga birakir.";
+  }
+  if (game.place === "disari") {
+    return "Guvenli alan sinirini belirler, kurali net soyler, oyunu takip eder.";
+  }
+  return "Tek kurali soyler, ilk adimi gosterir, cocugu destekleyip oyunu kapatir.";
+}
+
+function inferChildRole(game) {
+  const theme = String(inferTheme(game) || "");
+  if (theme === "Sakinlesme") return "Komutlari takip eder, yavas ve kontrollu hareket eder.";
+  if (theme === "Enerji Atma") return "Hareket adimlarini uygular, sirasini bekler, guvenli tempoda oynar.";
+  if (theme === "Dil Gelisimi") return "Kelimeleri soyler, secim yapar, kendi fikrini ifade eder.";
+  return "Kurali uygular, kendi secimini yapar ve tur sonunda geri bildirim verir.";
+}
+
+function normalizeSteps(steps) {
+  const fallback = [
+    "Baba kurali tek cumleyle soyler ve ilk denemeyi gosterir.",
+    "Cocuk 1-2 dakika oyunu uygular; baba sadece kisa yonlendirme yapar.",
+    "Tur sonunda birlikte kutlama yapip bir tur daha ya da yeni oyun secilir.",
+  ];
+  const safe = (steps || []).map(normalizeText).filter(Boolean);
+  while (safe.length < 3) safe.push(fallback[safe.length]);
+  return safe.slice(0, 3);
+}
+
 function inferTheme(game) {
   const text = `${game.title} ${game.skill}`.toLowerCase();
   if (text.includes("nefes") || text.includes("sakin") || text.includes("yildiz")) return "Sakinlesme";
@@ -226,10 +259,12 @@ function enrichGame(game, idx) {
     ...game,
     title: normalizeText(game.title),
     safety: normalizeText(game.safety),
-    steps: (game.steps || []).map(normalizeText).slice(0, 3),
+    steps: normalizeSteps(game.steps),
     theme: game.theme || inferTheme(game),
     dad_tip: game.dad_tip || buildDadTip(game),
     age_variation: game.age_variation || buildAgeVariation(game),
+    father_role: game.father_role || inferFatherRole(game),
+    child_role: game.child_role || inferChildRole(game),
     plan_phase: game.plan_phase || PLAN_PHASES[idx % PLAN_PHASES.length],
   };
 }
@@ -278,6 +313,8 @@ function auditAndPolishGames(catalog) {
       title,
       steps: safeSteps,
       safety,
+      father_role: normalizeText(g.father_role || inferFatherRole(g)),
+      child_role: normalizeText(g.child_role || inferChildRole(g)),
     };
   });
 }
@@ -302,6 +339,7 @@ const games = buildGameCatalog(baseGames);
 const STORAGE_KEYS = {
   favorites: "babaOgul4YasFavs",
   played: "babaOgul4YasPlayed",
+  league: "babaOgul4YasLeague",
 };
 
 const LEGACY_STORAGE_KEYS = {
@@ -325,6 +363,42 @@ function readStateWithLegacy(primaryKey, legacyKey) {
 
 let favorites = readStateWithLegacy(STORAGE_KEYS.favorites, LEGACY_STORAGE_KEYS.favorites);
 let played = readStateWithLegacy(STORAGE_KEYS.played, LEGACY_STORAGE_KEYS.played);
+let leagueState = { score: 0, weekPlayed: 0, trophies: [] };
+
+function getWeekKey() {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 1);
+  const day = Math.floor((now - start) / 86400000);
+  const week = Math.ceil((day + start.getDay() + 1) / 7);
+  return `${now.getFullYear()}-W${week}`;
+}
+
+function readLeagueState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.league);
+    if (!raw) return { score: 0, weekPlayed: 0, trophies: [], weekKey: getWeekKey() };
+    const parsed = JSON.parse(raw) || {};
+    if (parsed.weekKey !== getWeekKey()) {
+      return { score: parsed.score || 0, weekPlayed: 0, trophies: [], weekKey: getWeekKey() };
+    }
+    return {
+      score: Number(parsed.score || 0),
+      weekPlayed: Number(parsed.weekPlayed || 0),
+      trophies: Array.isArray(parsed.trophies) ? parsed.trophies : [],
+      weekKey: parsed.weekKey || getWeekKey(),
+    };
+  } catch (e) {
+    return { score: 0, weekPlayed: 0, trophies: [], weekKey: getWeekKey() };
+  }
+}
+
+function saveLeagueState() {
+  try {
+    localStorage.setItem(STORAGE_KEYS.league, JSON.stringify(leagueState));
+  } catch (e) {
+    // no-op
+  }
+}
 
 const titleEl = document.getElementById("gameTitle");
 const durationEl = document.getElementById("durationBadge");
@@ -335,8 +409,14 @@ const themeTextEl = document.getElementById("themeText");
 const dadTipTextEl = document.getElementById("dadTipText");
 const ageVariationTextEl = document.getElementById("ageVariationText");
 const planRoleTextEl = document.getElementById("planRoleText");
+const fatherRoleTextEl = document.getElementById("fatherRoleText");
+const childRoleTextEl = document.getElementById("childRoleText");
 const totalGamesCountEl = document.getElementById("totalGamesCount");
 const dailyPlanGridEl = document.getElementById("dailyPlanGrid");
+const smartPickHintEl = document.getElementById("smartPickHint");
+const leagueScoreEl = document.getElementById("leagueScore");
+const leagueWeekPlayedEl = document.getElementById("leagueWeekPlayed");
+const leagueCupsEl = document.getElementById("leagueCups");
 const stepsEl = document.getElementById("gameSteps");
 const safetyEl = document.getElementById("gameSafety");
 const cardEl = document.getElementById("gameCard");
@@ -348,10 +428,13 @@ const playedBtn = document.getElementById("playedBtn");
 const timerDisplay = document.getElementById("gameTimer");
 const timeText = document.getElementById("timeText");
 const timerBtn = document.getElementById("timerBtn");
+const smartPickBtn = document.getElementById("smartPickBtn");
+const crisisBtn = document.getElementById("crisisBtn");
 
 let currentGameId = null;
 let timerInterval = null;
 let timeRemaining = 0;
+leagueState = readLeagueState();
 
 function labelPlace(place) {
   return place === "disari" ? "Dışarı" : "Ev içi";
@@ -425,6 +508,72 @@ function renderDailyPlan(pool) {
   }).join("");
 }
 
+function computeTrophies(state) {
+  const cups = [];
+  if (state.weekPlayed >= 3) cups.push("🏆 Kahkaha Kupasi");
+  if (state.weekPlayed >= 6) cups.push("🤝 Takim Ruhu Kupasi");
+  if (state.score >= 120) cups.push("⚡ Enerji Sampiyonu");
+  return cups;
+}
+
+function renderLeaguePanel() {
+  if (!leagueScoreEl || !leagueWeekPlayedEl || !leagueCupsEl) return;
+  leagueScoreEl.textContent = String(leagueState.score || 0);
+  leagueWeekPlayedEl.textContent = String(leagueState.weekPlayed || 0);
+  const cups = computeTrophies(leagueState);
+  leagueState.trophies = cups;
+  leagueCupsEl.textContent = cups.length ? cups.join(" · ") : "-";
+  saveLeagueState();
+}
+
+function gameMatchesSmartIntent(game, energy, mood) {
+  const skill = String(game.skill || "").toLowerCase();
+  const theme = String(game.theme || "").toLowerCase();
+  const duration = String(game.duration || "15");
+
+  const energyRule =
+    (energy === "yuksek" && (duration === "15" || duration === "30")) ||
+    (energy === "orta" && duration === "15") ||
+    (energy === "dusuk" && duration === "5");
+
+  let moodRule = true;
+  if (mood === "fiziksel") moodRule = skill.includes("motor") || theme.includes("enerji");
+  if (mood === "dil") moodRule = skill.includes("dil") || skill.includes("ifade") || theme.includes("dil");
+  if (mood === "sakin") moodRule = theme.includes("sakin") || skill.includes("nefes") || duration === "5";
+
+  return energyRule && moodRule;
+}
+
+function handleSmartPick() {
+  const energy = document.getElementById("energyLevel").value;
+  const mood = document.getElementById("moodGoal").value;
+  const pool = getFilteredGames(false);
+  const matched = pool.filter((g) => gameMatchesSmartIntent(g, energy, mood));
+  const selected = matched.length ? pickRandom(matched) : (pool.length ? pickRandom(pool) : null);
+
+  if (!selected) {
+    showRandom(false, true);
+    if (smartPickHintEl) smartPickHintEl.textContent = "Bu ayarda oyun bulunamadi, filtreleri biraz gevsettim.";
+    return;
+  }
+
+  renderGame(selected);
+  renderDailyPlan(matched.length ? matched : pool);
+  if (smartPickHintEl) smartPickHintEl.textContent = `Secildi: ${energy} enerji + ${mood} moduna uygun.`;
+}
+
+function handleCrisisMode() {
+  const pool = games.filter((g) => g.duration === "5" && g.material === "yok");
+  if (!pool.length) {
+    showRandom(true, true);
+    return;
+  }
+  const selected = pickRandom(pool);
+  renderGame(selected);
+  renderDailyPlan(pool);
+  if (smartPickHintEl) smartPickHintEl.textContent = "Kriz modu acildi: 10 saniyede baslayacagin hizli oyun secildi.";
+}
+
 function toggleFavorite() {
   if (!currentGameId) return;
   const index = favorites.indexOf(currentGameId);
@@ -442,17 +591,25 @@ function toggleFavorite() {
 
 function togglePlayed() {
   if (!currentGameId) return;
+  const currentGame = games.find((g) => g.id === currentGameId);
+  const durationValue = currentGame ? Number(currentGame.duration || 5) : 5;
+  const gained = durationValue >= 30 ? 25 : durationValue >= 15 ? 15 : 8;
   const index = played.indexOf(currentGameId);
   if (index === -1) {
     played.push(currentGameId);
     playedBtn.classList.add("played");
     playedBtn.textContent = "✅ Bu Oyunu Oynadık (Geri Al)";
+    leagueState.score += gained;
+    leagueState.weekPlayed += 1;
   } else {
     played.splice(index, 1);
     playedBtn.classList.remove("played");
     playedBtn.textContent = "✅ Bu Oyunu Oynadık!";
+    leagueState.score = Math.max(0, leagueState.score - gained);
+    leagueState.weekPlayed = Math.max(0, leagueState.weekPlayed - 1);
   }
   localStorage.setItem(STORAGE_KEYS.played, JSON.stringify(played));
+  renderLeaguePanel();
 }
 
 function formatTime(seconds) {
@@ -530,6 +687,8 @@ function renderGame(game) {
   dadTipTextEl.textContent = game.dad_tip || "--";
   ageVariationTextEl.textContent = game.age_variation || "--";
   planRoleTextEl.textContent = game.plan_phase || "--";
+  fatherRoleTextEl.textContent = game.father_role || "--";
+  childRoleTextEl.textContent = game.child_role || "--";
   safetyEl.textContent = "💡 Önemli İpucu: " + game.safety;
   
   if (favorites.includes(game.id)) {
@@ -592,6 +751,8 @@ function showRandom(easyMode = false, deterministic = false) {
     dadTipTextEl.textContent = "--";
     ageVariationTextEl.textContent = "--";
     planRoleTextEl.textContent = "--";
+    fatherRoleTextEl.textContent = "--";
+    childRoleTextEl.textContent = "--";
     
     favBtn.textContent = "🤍";
     favBtn.classList.remove("active");
@@ -611,6 +772,8 @@ function showRandom(easyMode = false, deterministic = false) {
 
 document.getElementById("randomBtn").addEventListener("click", () => showRandom(false));
 document.getElementById("easyModeBtn").addEventListener("click", () => showRandom(true));
+if (smartPickBtn) smartPickBtn.addEventListener("click", handleSmartPick);
+if (crisisBtn) crisisBtn.addEventListener("click", handleCrisisMode);
 
 // Filtre Değişimlerinde Rastgele Tetikte
 document.getElementById("durationFilter").addEventListener("change", () => showRandom(false));
@@ -630,4 +793,5 @@ shareBtn.addEventListener("click", shareGame);
 
 // Uygulama motorunu çalıştır
 if (totalGamesCountEl) totalGamesCountEl.textContent = String(games.length);
+renderLeaguePanel();
 showRandom(false);

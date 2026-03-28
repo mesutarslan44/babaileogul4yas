@@ -71,6 +71,30 @@
       </label>
     </section>
 
+    <section class="smart-panel">
+      <h3>Akilli Oyun Secici</h3>
+      <div class="smart-grid">
+        <label>
+          Enerji
+          <select id="energyLevel">
+            <option value="yuksek">Yuksek</option>
+            <option value="orta" selected>Orta</option>
+            <option value="dusuk">Dusuk</option>
+          </select>
+        </label>
+        <label>
+          Mod
+          <select id="moodGoal">
+            <option value="fiziksel" selected>Fiziksel oyun</option>
+            <option value="dil">Dil/iletisim</option>
+            <option value="sakin">Sakinlesme</option>
+          </select>
+        </label>
+      </div>
+      <button id="smartPickBtn" class="ghost smart-btn">🧠 Bana En Uygun Oyunu Sec</button>
+      <p id="smartPickHint" class="smart-hint">Enerji + moda gore en uygun kart secilir.</p>
+    </section>
+
     <section class="game-card" id="gameCard">
       <div class="card-top-actions">
         <button id="shareBtn" class="action-btn" aria-label="Whatsapp'ta Paylaş">📤</button>
@@ -90,6 +114,13 @@
         <p><strong>Yas Varyasyonu:</strong> <span id="ageVariationText">--</span></p>
         <p><strong>3'lu Plan Rolu:</strong> <span id="planRoleText">--</span></p>
       </div>
+
+      <div class="howto-roles">
+        <p><strong>Baba ne yapar:</strong> <span id="fatherRoleText">--</span></p>
+        <p><strong>Cocuk ne yapar:</strong> <span id="childRoleText">--</span></p>
+      </div>
+
+      <p class="howto-title">Nasil Oynanir? (3 Net Adim)</p>
       <ol id="gameSteps">
         <li>Yükleniyor...</li>
       </ol>
@@ -107,12 +138,31 @@
     <section class="actions">
       <button id="randomBtn" class="primary">🎲 Yeni Oyun Getir</button>
       <button id="easyModeBtn" class="ghost">💤 Baba Yorgun Modu</button>
+      <button id="crisisBtn" class="ghost crisis-btn">🚨 Kriz Butonu (10 sn)</button>
     </section>
 
     <section class="daily-plan" id="dailyPlan">
       <h3>Bugun Icin 3'lu Oyun Plani</h3>
       <div class="plan-grid" id="dailyPlanGrid">
         <div class="plan-item">Yukleniyor...</div>
+      </div>
+    </section>
+
+    <section class="league-panel" id="leaguePanel">
+      <h3>Baba vs Ogul Mini Lig</h3>
+      <div class="league-grid">
+        <div class="league-item">
+          <span>Puan</span>
+          <strong id="leagueScore">0</strong>
+        </div>
+        <div class="league-item">
+          <span>Bu Hafta Oynanan</span>
+          <strong id="leagueWeekPlayed">0</strong>
+        </div>
+        <div class="league-item">
+          <span>Kupalar</span>
+          <strong id="leagueCups">-</strong>
+        </div>
       </div>
     </section>
   </main>
