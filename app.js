@@ -1,4 +1,4 @@
-const games = [
+const baseGames = [
   { id:"g1", title: "Renk Avcıları 🎨", duration: "5", place: "ev", material: "yok", skill: "Dikkat + Dil Gelişimi", steps: ["Oyuna başlamak için baba odadaki etrafta olan bir rengi seçip söyler. Örneğin: 'Kırmızı!'", "Çocuğunuzun hevesle odada o renge sahip tam 3 farklı eşyayı bulup onlara dokunması gerekir.", "Dokunduğu her eşyanın ne olduğunu yüksek sesle söylemelidir (Örn: 'Kırmızı yastık!'). Ardından renk seçme sırası çocuğa geçer."], safety: "Heyecanla koşarken kaymamak için ayağında kaydırmaz çorap olduğundan emin olun." },
   { id:"g2", title: "Yastık Adası 🏝️", duration: "15", place: "ev", material: "var", skill: "Denge + Kaba Motor", steps: ["Odadaki bütün yumuşak yastıkları ve minderleri yere aralıklı olarak dizerek 'adalar' oluşturun.", "Yerdeki boş alanların 'timsahlı su' olduğunu hayal edin. Çocuğunuz sadece yastıklara basarak odanın bir ucundan diğerine geçmeye çalışsın.", "Zorluğu artırmak için adaların arasını biraz daha açabilir veya sekerek gitmesini isteyebilirsiniz."], safety: "Yastıkların zemin üzerinde kayıp düşmeye sebep olmaması için altlarına halı denk gelmesine dikkat edin." },
   { id:"g3", title: "Hayvan Taklidi 🦁", duration: "5", place: "ev", material: "yok", skill: "Hayal Gücü + İfade", steps: ["Baba aklından bir hayvan seçer ve onun çıkardığı sesi, yürüme şeklini taklit etmeye başlar.", "Çocuk gülerek bu hayvanın ne olduğunu tahmin etmeye çalışır.", "Doğru bildiğinde sıra çocuğa geçer; bu sefer o kendi seçtiği hayvanı canlandırır ve baba bulmaya çalışır."], safety: "Maymun veya kurbağa gibi zıplamalı taklitlerde etraftaki eşyalara çarpmamaya özen gösterin." },
@@ -102,14 +102,128 @@ const games = [
 
 ];
 
-let favorites = JSON.parse(localStorage.getItem("babaOgle4YasFavs")) || [];
-let played = JSON.parse(localStorage.getItem("babaOgle4YasPlayed")) || [];
+const THEME_POOL = [
+  "Enerji Atma",
+  "Sakinlesme",
+  "Dil Gelisimi",
+  "Dikkat",
+  "Hayal Gucu",
+  "Dogada Kesif",
+  "Ince Motor",
+  "Aile Bag Kurma",
+];
+
+const PLAN_PHASES = ["Acilis (5 dk)", "Ana Oyun (15 dk)", "Sakin Kapanis (5-15 dk)"];
+
+function inferTheme(game) {
+  const text = `${game.title} ${game.skill}`.toLowerCase();
+  if (text.includes("nefes") || text.includes("sakin") || text.includes("yildiz")) return "Sakinlesme";
+  if (text.includes("dil") || text.includes("hikaye") || text.includes("ifade")) return "Dil Gelisimi";
+  if (text.includes("denge") || text.includes("motor") || text.includes("parkur") || text.includes("yaris")) return "Enerji Atma";
+  if (text.includes("doga") || text.includes("park") || text.includes("agac") || text.includes("bulut")) return "Dogada Kesif";
+  if (text.includes("ince") || text.includes("origami") || text.includes("hamur") || text.includes("ciz")) return "Ince Motor";
+  if (text.includes("hayal") || text.includes("rol") || text.includes("kukla")) return "Hayal Gucu";
+  if (text.includes("dikkat") || text.includes("hafiza") || text.includes("odak")) return "Dikkat";
+  return "Aile Bag Kurma";
+}
+
+function buildDadTip(game) {
+  if (game.duration === "5") return "Ilk 60 saniyeyi sen oynayarak ac, sonra rolu cocuga ver.";
+  if (game.place === "disari") return "Kisa kural koy: once guvenlik, sonra hiz. Oyunun temposunu cocuk secsin.";
+  if (game.material === "var") return "Malzemeleri once hazirlayip gorunur yere koy; gecisler hizli olur.";
+  return "Yorulunca 20 saniyelik mini mola verip tekrar ayni oyuna don.";
+}
+
+function buildAgeVariation(game) {
+  return "Kolay: 2 tur. Zor: 4 tur + rol degisimi. Ilgi duserse sureyi yariya indir.";
+}
+
+function enrichGame(game, idx) {
+  return {
+    ...game,
+    theme: game.theme || inferTheme(game),
+    dad_tip: game.dad_tip || buildDadTip(game),
+    age_variation: game.age_variation || buildAgeVariation(game),
+    plan_phase: game.plan_phase || PLAN_PHASES[idx % PLAN_PHASES.length],
+  };
+}
+
+function createVariation(base, idNum) {
+  const variantTag = idNum % 2 === 0 ? "Mini" : "Turbo";
+  const duration = base.duration === "30" ? "15" : base.duration;
+  const theme = THEME_POOL[idNum % THEME_POOL.length];
+  return {
+    ...base,
+    id: `g${idNum}`,
+    title: `${base.title} - ${variantTag}`,
+    duration,
+    steps: [
+      `${base.steps[0]} (Kisa versiyon)`,
+      `${base.steps[1]} (Cocugun secim yapmasina izin ver)`,
+      `${base.steps[2]} (Bitiste mini kutlama yap)`,
+    ],
+    theme,
+    dad_tip: "Oyun ortasinda cocuk karar versin: hizli mi sakin mi devam? Kontrol hissi motivasyonu artirir.",
+    age_variation: "Kolay: tek gorev. Zor: ayni oyuna bir yeni kural ekle.",
+    plan_phase: PLAN_PHASES[idNum % PLAN_PHASES.length],
+  };
+}
+
+function buildGameCatalog(baseGames) {
+  const enrichedBase = baseGames.map((g, i) => enrichGame(g, i));
+  const targetCount = 200;
+  const catalog = [...enrichedBase];
+  let cursor = 0;
+  let nextId = enrichedBase.length + 1;
+  while (catalog.length < targetCount) {
+    const base = enrichedBase[cursor % enrichedBase.length];
+    catalog.push(createVariation(base, nextId));
+    cursor += 1;
+    nextId += 1;
+  }
+  return catalog;
+}
+
+const games = buildGameCatalog(baseGames);
+
+const STORAGE_KEYS = {
+  favorites: "babaOgul4YasFavs",
+  played: "babaOgul4YasPlayed",
+};
+
+const LEGACY_STORAGE_KEYS = {
+  favorites: "babaOgle4YasFavs",
+  played: "babaOgle4YasPlayed",
+};
+
+function readStateWithLegacy(primaryKey, legacyKey) {
+  try {
+    const currentRaw = localStorage.getItem(primaryKey);
+    if (currentRaw) return JSON.parse(currentRaw) || [];
+    const legacyRaw = localStorage.getItem(legacyKey);
+    if (!legacyRaw) return [];
+    const legacyData = JSON.parse(legacyRaw) || [];
+    localStorage.setItem(primaryKey, JSON.stringify(legacyData));
+    return legacyData;
+  } catch (e) {
+    return [];
+  }
+}
+
+let favorites = readStateWithLegacy(STORAGE_KEYS.favorites, LEGACY_STORAGE_KEYS.favorites);
+let played = readStateWithLegacy(STORAGE_KEYS.played, LEGACY_STORAGE_KEYS.played);
 
 const titleEl = document.getElementById("gameTitle");
 const durationEl = document.getElementById("durationBadge");
 const placeEl = document.getElementById("placeBadge");
 const materialEl = document.getElementById("materialBadge");
 const skillEl = document.getElementById("gameSkill");
+const themeTextEl = document.getElementById("themeText");
+const dadTipTextEl = document.getElementById("dadTipText");
+const ageVariationTextEl = document.getElementById("ageVariationText");
+const planRoleTextEl = document.getElementById("planRoleText");
+const totalGamesCountEl = document.getElementById("totalGamesCount");
+const dailyPlanGridEl = document.getElementById("dailyPlanGrid");
 const stepsEl = document.getElementById("gameSteps");
 const safetyEl = document.getElementById("gameSafety");
 const cardEl = document.getElementById("gameCard");
@@ -153,7 +267,9 @@ function getFilteredGames(easyMode) {
     if (searchTerm) {
       const isMatch = g.title.toLowerCase().includes(searchTerm) || 
                       g.steps.join(" ").toLowerCase().includes(searchTerm) || 
-                      g.skill.toLowerCase().includes(searchTerm);
+                      g.skill.toLowerCase().includes(searchTerm) ||
+                      (g.theme || "").toLowerCase().includes(searchTerm) ||
+                      (g.dad_tip || "").toLowerCase().includes(searchTerm);
       if (!isMatch) return false;
     }
     
@@ -166,12 +282,34 @@ function pickRandom(list) {
 }
 
 function fireConfetti() {
+  if (typeof confetti !== "function") return;
   confetti({
     particleCount: 150,
     spread: 80,
     origin: { y: 0.6 },
     colors: ['#ff8a2a', '#0ea5b8', '#ff6b6b', '#ffd89b']
   });
+}
+
+function renderDailyPlan(pool) {
+  if (!dailyPlanGridEl) return;
+  const source = Array.isArray(pool) && pool.length ? pool : games;
+  const uniqueById = [];
+  const used = new Set();
+
+  for (const phase of PLAN_PHASES) {
+    const candidates = source.filter((g) => g.plan_phase === phase && !used.has(g.id));
+    const picked = candidates.length ? candidates[Math.floor(Math.random() * candidates.length)] : source[Math.floor(Math.random() * source.length)];
+    if (picked && !used.has(picked.id)) {
+      uniqueById.push({ phase, game: picked });
+      used.add(picked.id);
+    }
+  }
+
+  dailyPlanGridEl.innerHTML = uniqueById.map((item) => {
+    const g = item.game;
+    return `<article class="plan-item"><span class="plan-label">${item.phase}</span><div class="plan-name">${g.title}</div><div class="plan-meta">${g.duration} dk · ${labelPlace(g.place)}</div></article>`;
+  }).join("");
 }
 
 function toggleFavorite() {
@@ -186,7 +324,7 @@ function toggleFavorite() {
     favBtn.classList.remove("active");
     favBtn.textContent = "🤍";
   }
-  localStorage.setItem("babaOgle4YasFavs", JSON.stringify(favorites));
+  localStorage.setItem(STORAGE_KEYS.favorites, JSON.stringify(favorites));
 }
 
 function togglePlayed() {
@@ -201,7 +339,7 @@ function togglePlayed() {
     playedBtn.classList.remove("played");
     playedBtn.textContent = "✅ Bu Oyunu Oynadık!";
   }
-  localStorage.setItem("babaOgle4YasPlayed", JSON.stringify(played));
+  localStorage.setItem(STORAGE_KEYS.played, JSON.stringify(played));
 }
 
 function formatTime(seconds) {
@@ -275,6 +413,10 @@ function renderGame(game) {
   placeEl.textContent = labelPlace(game.place);
   materialEl.textContent = labelMaterial(game.material);
   skillEl.textContent = "Beceri: " + game.skill;
+  themeTextEl.textContent = game.theme || "--";
+  dadTipTextEl.textContent = game.dad_tip || "--";
+  ageVariationTextEl.textContent = game.age_variation || "--";
+  planRoleTextEl.textContent = game.plan_phase || "--";
   safetyEl.textContent = "💡 Önemli İpucu: " + game.safety;
   
   if (favorites.includes(game.id)) {
@@ -317,7 +459,7 @@ function renderGame(game) {
   fireConfetti();
 }
 
-function showRandom(easyMode = false) {
+function showRandom(easyMode = false, deterministic = false) {
   const filtered = getFilteredGames(easyMode);
   if (!filtered.length) {
     cardEl.classList.remove("animate-pop");
@@ -333,6 +475,10 @@ function showRandom(easyMode = false) {
     materialEl.textContent = "--";
     stepsEl.innerHTML = "<li>Arama kutusuna yanlış bir kelime girmiş olabilirsiniz.</li><li>'Sadece Favoriler' veya 'Oynanmamışlar' filtreleri seçiliyse aradığınız listede o oyun bitmiş olabilir.</li><li>Filtrelerinizi biraz normal seviyeye çekip tekrar deneyin.</li>";
     safetyEl.textContent = "💡 Bilgi: Arama kutusunu tamamen silip 'Hepsi'ne tıklayarak baştan başlayın.";
+    themeTextEl.textContent = "--";
+    dadTipTextEl.textContent = "--";
+    ageVariationTextEl.textContent = "--";
+    planRoleTextEl.textContent = "--";
     
     favBtn.textContent = "🤍";
     favBtn.classList.remove("active");
@@ -344,7 +490,10 @@ function showRandom(easyMode = false) {
     cardEl.classList.add("animate-pop");
     return;
   }
-  renderGame(pickRandom(filtered));
+  const shouldPickFirst = deterministic || !!searchInput.value.trim();
+  const selected = shouldPickFirst ? filtered[0] : pickRandom(filtered);
+  renderGame(selected);
+  renderDailyPlan(filtered);
 }
 
 document.getElementById("randomBtn").addEventListener("click", () => showRandom(false));
@@ -358,8 +507,7 @@ document.getElementById("favoriteFilter").addEventListener("change", () => showR
 
 // Arama tuşlama eventleri
 searchInput.addEventListener("input", () => {
-    // anında filtre yansıtılıyor, enter beklenmeksizin heyecanlı akış (debounce)
-    showRandom(false);
+    showRandom(false, true);
 });
 
 favBtn.addEventListener("click", toggleFavorite);
@@ -368,4 +516,5 @@ timerBtn.addEventListener("click", handleTimerClick);
 shareBtn.addEventListener("click", shareGame);
 
 // Uygulama motorunu çalıştır
+if (totalGamesCountEl) totalGamesCountEl.textContent = String(games.length);
 showRandom(false);

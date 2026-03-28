@@ -80,6 +80,13 @@ body {
   opacity: 0.85;
 }
 
+.hero-meta {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 700;
+}
+
 /* ARAMA KUTUSU */
 .search-bar-container {
   width: 100%;
@@ -280,6 +287,27 @@ select:hover, select:focus {
   border: 1px solid #bce1e6;
 }
 
+.game-insight {
+  margin: 4px 0 18px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px dashed #cfd8e3;
+  background: rgba(255, 255, 255, 0.55);
+  display: grid;
+  gap: 6px;
+}
+
+.game-insight p {
+  margin: 0;
+  font-size: 13px;
+  color: #334155;
+  line-height: 1.45;
+}
+
+.game-insight strong {
+  color: #0c5f6d;
+}
+
 ol {
   margin: 0;
   padding-left: 0;
@@ -419,6 +447,58 @@ ol li::before {
   animation-delay: 0.6s;
 }
 
+.daily-plan {
+  width: 100%;
+  max-width: 640px;
+  margin-top: 18px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  padding: 14px;
+  text-align: left;
+}
+
+.daily-plan h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  color: #2b3a4a;
+}
+
+.plan-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(150px, 1fr));
+  gap: 8px;
+}
+
+.plan-item {
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  border-radius: 12px;
+  padding: 9px;
+}
+
+.plan-item .plan-label {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 800;
+  color: #0ea5b8;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.plan-item .plan-name {
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.plan-item .plan-meta {
+  margin-top: 3px;
+  font-size: 12px;
+  color: #64748b;
+}
+
 .primary {
   background: linear-gradient(135deg, #ff8a2a, #ff6b6b);
   color: #fff;
@@ -469,4 +549,5 @@ ol li::before {
   .action-btn { width: 40px; height: 40px; font-size: 18px; }
   .badges { padding-right: 80px; }
   .time-text { font-size: 30px; }
+  .plan-grid { grid-template-columns: 1fr; }
 }

@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Baba ve 4 yaşındaki oğlu için rastgele, eğlenceli ve öğretici oyun fikirleri üreten harika bir asistan." />
   
   <link rel="manifest" href="manifest.json" />
@@ -28,6 +28,7 @@
       <p class="eyebrow">4 Yaş Baba - Oğul Oyun Kutusu</p>
       <h1>Aç, Oyna, Gülüş Topla 🚀</h1>
       <p class="hero-copy">Her açılışta çocuğunla hemen oynayabileceğin interaktif ve eğlenceli yeni bir oyun fikri!</p>
+      <p class="hero-meta">Toplam oyun: <strong id="totalGamesCount">--</strong></p>
     </header>
 
     <section class="search-bar-container">
@@ -83,6 +84,12 @@
       </div>
       <h2 id="gameTitle">Oyun yükleniyor...</h2>
       <p class="skill" id="gameSkill">Beceri: --</p>
+      <div class="game-insight">
+        <p><strong>Tema:</strong> <span id="themeText">--</span></p>
+        <p><strong>Baba Taktigi:</strong> <span id="dadTipText">--</span></p>
+        <p><strong>Yas Varyasyonu:</strong> <span id="ageVariationText">--</span></p>
+        <p><strong>3'lu Plan Rolu:</strong> <span id="planRoleText">--</span></p>
+      </div>
       <ol id="gameSteps">
         <li>Yükleniyor...</li>
       </ol>
@@ -100,6 +107,13 @@
     <section class="actions">
       <button id="randomBtn" class="primary">🎲 Yeni Oyun Getir</button>
       <button id="easyModeBtn" class="ghost">💤 Baba Yorgun Modu</button>
+    </section>
+
+    <section class="daily-plan" id="dailyPlan">
+      <h3>Bugun Icin 3'lu Oyun Plani</h3>
+      <div class="plan-grid" id="dailyPlanGrid">
+        <div class="plan-item">Yukleniyor...</div>
+      </div>
     </section>
   </main>
 
