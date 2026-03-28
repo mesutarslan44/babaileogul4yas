@@ -115,6 +115,84 @@ const THEME_POOL = [
 
 const PLAN_PHASES = ["Acilis (5 dk)", "Ana Oyun (15 dk)", "Sakin Kapanis (5-15 dk)"];
 
+const PREMIUM_VARIATION_MODES = [
+  {
+    label: "Misyon Karti",
+    duration: "5",
+    material: "yok",
+    skill: "Hizli Odak + Eglence",
+    steps: (b) => [
+      `Bu turda gorev: ${b.title.replace(/\s[-–].*$/, "")}.`,
+      "90 saniye boyunca sadece tek kuralla oynayin ve tempoyu cocuk belirlesin.",
+      "Bitiste mini kutlama yapip bir tur daha isteyip istemedigini cocuga sorun.",
+    ],
+  },
+  {
+    label: "Role Swap",
+    duration: "15",
+    material: "yok",
+    skill: "Liderlik + Sirayla Oynama",
+    steps: () => [
+      "Ilk turda baba kurallari koyar ve oyunu gosterir.",
+      "Ikinci turda cocuk kurali degistirir, baba sadece uygular.",
+      "Son turda birlikte tek bir altin kural secip oyunu tamamlayin.",
+    ],
+  },
+  {
+    label: "Sessiz Tur",
+    duration: "5",
+    material: "yok",
+    skill: "Dikkat + Isitsel Algı",
+    steps: () => [
+      "Ilk 30 saniye oyunu konusmadan sadece isaretlerle baslatin.",
+      "Ardindan tek kelimelik komutla oyunu devam ettirin.",
+      "Sonunda cocuk oyunu bir cümleyle ozetleyip puanlasin.",
+    ],
+  },
+  {
+    label: "Takim Modu",
+    duration: "15",
+    material: "var",
+    skill: "Isbirligi + Planlama",
+    steps: () => [
+      "Malzemeleri birlikte sayip gorev listesi cikarın.",
+      "Baba bir adim, cocuk bir adim ilerleyerek ortak hedefe ulassin.",
+      "Hedefe varinca rolu degistirip ayni oyunu ters sirayla deneyin.",
+    ],
+  },
+  {
+    label: "Acik Hava Challenge",
+    duration: "15",
+    material: "yok",
+    place: "disari",
+    skill: "Denge + Doga Farkindaligi",
+    steps: () => [
+      "Guvenli alanda bir baslangic ve bir bitis noktasi secin.",
+      "Her 20 adimda bir mini gorev (dur, dinle, bul) ekleyin.",
+      "Kapanista en keyifli anı cocugun anlatmasini isteyin.",
+    ],
+  },
+  {
+    label: "Sakin Kapanis",
+    duration: "5",
+    material: "yok",
+    skill: "Nefes + Regülasyon",
+    steps: () => [
+      "Oyunun sonunda birlikte 3 derin nefes alın.",
+      "Bir sonraki oyuna kadar sakin bir mini gorev secin.",
+      "Cocuga bugun en sevdigi bolumu sorup gunu kapatin.",
+    ],
+  },
+];
+
+function normalizeText(value) {
+  return String(value || "")
+    .replace(/\s+/g, " ")
+    .replace("güül", "gul")
+    .replace("  ", " ")
+    .trim();
+}
+
 function inferTheme(game) {
   const text = `${game.title} ${game.skill}`.toLowerCase();
   if (text.includes("nefes") || text.includes("sakin") || text.includes("yildiz")) return "Sakinlesme";
@@ -128,19 +206,27 @@ function inferTheme(game) {
 }
 
 function buildDadTip(game) {
-  if (game.duration === "5") return "Ilk 60 saniyeyi sen oynayarak ac, sonra rolu cocuga ver.";
-  if (game.place === "disari") return "Kisa kural koy: once guvenlik, sonra hiz. Oyunun temposunu cocuk secsin.";
-  if (game.material === "var") return "Malzemeleri once hazirlayip gorunur yere koy; gecisler hizli olur.";
-  return "Yorulunca 20 saniyelik mini mola verip tekrar ayni oyuna don.";
+  const theme = inferTheme(game);
+  if (theme === "Sakinlesme") return "Ses tonunu dusur, tempoyu cocuk belirlesin; acele ettirme.";
+  if (theme === "Enerji Atma") return "Alani once bosalt, sonra net basla-bitir komutu ver.";
+  if (theme === "Dil Gelisimi") return "Kisa soru sor, uzun anlatimi cocuga birak.";
+  if (game.place === "disari") return "Once guvenli siniri belirle, sonra oyuna gec.";
+  if (game.material === "var") return "Malzemeleri bastan hazirla; gecisleri hizlandir.";
+  return "20 saniyelik mini molalarla oyunu akici tut.";
 }
 
 function buildAgeVariation(game) {
-  return "Kolay: 2 tur. Zor: 4 tur + rol degisimi. Ilgi duserse sureyi yariya indir.";
+  if (game.duration === "5") return "Kolay: 1 tur. Zor: 3 tur + rol degisimi.";
+  if (game.duration === "30") return "Kolay: 15 dk uygula. Zor: ayni oyuna ek gorev koy.";
+  return "Kolay: 2 tur. Zor: 4 tur + cocuk kurali eklesin.";
 }
 
 function enrichGame(game, idx) {
   return {
     ...game,
+    title: normalizeText(game.title),
+    safety: normalizeText(game.safety),
+    steps: (game.steps || []).map(normalizeText).slice(0, 3),
     theme: game.theme || inferTheme(game),
     dad_tip: game.dad_tip || buildDadTip(game),
     age_variation: game.age_variation || buildAgeVariation(game),
@@ -148,25 +234,52 @@ function enrichGame(game, idx) {
   };
 }
 
-function createVariation(base, idNum) {
-  const variantTag = idNum % 2 === 0 ? "Mini" : "Turbo";
-  const duration = base.duration === "30" ? "15" : base.duration;
+function createPremiumVariation(base, idNum) {
+  const mode = PREMIUM_VARIATION_MODES[idNum % PREMIUM_VARIATION_MODES.length];
+  const duration = mode.duration || (idNum % 4 === 0 ? "5" : idNum % 3 === 0 ? "30" : "15");
+  const place = mode.place || (idNum % 5 === 0 ? "disari" : base.place);
+  const material = mode.material || (idNum % 2 === 0 ? "yok" : "var");
   const theme = THEME_POOL[idNum % THEME_POOL.length];
+  const rawTitle = base.title.replace(/\s[-–].*$/, "");
   return {
-    ...base,
     id: `g${idNum}`,
-    title: `${base.title} - ${variantTag}`,
+    title: `${rawTitle} • ${mode.label}`,
     duration,
-    steps: [
-      `${base.steps[0]} (Kisa versiyon)`,
-      `${base.steps[1]} (Cocugun secim yapmasina izin ver)`,
-      `${base.steps[2]} (Bitiste mini kutlama yap)`,
-    ],
+    place,
+    material,
+    skill: mode.skill || base.skill,
+    steps: mode.steps(base),
+    safety: base.safety,
     theme,
-    dad_tip: "Oyun ortasinda cocuk karar versin: hizli mi sakin mi devam? Kontrol hissi motivasyonu artirir.",
-    age_variation: "Kolay: tek gorev. Zor: ayni oyuna bir yeni kural ekle.",
+    dad_tip: buildDadTip({ ...base, place, material, duration, theme }),
+    age_variation: buildAgeVariation({ ...base, duration }),
     plan_phase: PLAN_PHASES[idNum % PLAN_PHASES.length],
   };
+}
+
+function auditAndPolishGames(catalog) {
+  const usedTitles = new Set();
+  return catalog.map((game, idx) => {
+    const g = enrichGame(game, idx);
+    let title = g.title;
+    if (usedTitles.has(title)) title = `${title} #${idx + 1}`;
+    usedTitles.add(title);
+
+    const safeSteps = g.steps.length === 3 ? g.steps : [
+      g.steps[0] || "Oyunu tanit ve kurali birlikte belirleyin.",
+      g.steps[1] || "Kisa bir tur oynayip rolu degistirin.",
+      g.steps[2] || "Bitiste kutlama yapip oyunu kapatin.",
+    ];
+
+    const safety = g.safety.endsWith(".") ? g.safety : `${g.safety}.`;
+
+    return {
+      ...g,
+      title,
+      steps: safeSteps,
+      safety,
+    };
+  });
 }
 
 function buildGameCatalog(baseGames) {
@@ -177,11 +290,11 @@ function buildGameCatalog(baseGames) {
   let nextId = enrichedBase.length + 1;
   while (catalog.length < targetCount) {
     const base = enrichedBase[cursor % enrichedBase.length];
-    catalog.push(createVariation(base, nextId));
+    catalog.push(createPremiumVariation(base, nextId));
     cursor += 1;
     nextId += 1;
   }
-  return catalog;
+  return auditAndPolishGames(catalog).slice(0, targetCount);
 }
 
 const games = buildGameCatalog(baseGames);
