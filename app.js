@@ -185,6 +185,16 @@ const PREMIUM_VARIATION_MODES = [
   },
 ];
 
+function getModeTip(label) {
+  if (label === "Misyon Karti") return "Kisa tur hedefi koy: once kurali goster, sonra cocuga birak.";
+  if (label === "Role Swap") return "Ilk turu sen yonet, ikinci turda kurali cocuk degistirsin.";
+  if (label === "Sessiz Tur") return "Ilk 30 saniye isaret diliyle oynayip odagi arttirin.";
+  if (label === "Takim Modu") return "Ayni hedefe birlikte ilerleyin; yarista degil ekipte kalin.";
+  if (label === "Acik Hava Challenge") return "Baslamadan once guvenli siniri birlikte belirleyin.";
+  if (label === "Sakin Kapanis") return "Bitiste nefes ve sarilma ile oyunu yumusak kapatin.";
+  return "Tempoyu cocuga birakarak oyunu keyifli akista tut.";
+}
+
 function normalizeText(value) {
   return String(value || "")
     .replace(/\s+/g, " ")
@@ -274,19 +284,28 @@ function createPremiumVariation(base, idNum) {
   const duration = mode.duration || (idNum % 4 === 0 ? "5" : idNum % 3 === 0 ? "30" : "15");
   const place = mode.place || (idNum % 5 === 0 ? "disari" : base.place);
   const material = mode.material || (idNum % 2 === 0 ? "yok" : "var");
-  const theme = THEME_POOL[idNum % THEME_POOL.length];
+  const theme = inferTheme(base);
   const rawTitle = base.title.replace(/\s[-–].*$/, "");
+  const normalizedBaseSteps = normalizeSteps(base.steps);
+  const variationSteps = [
+    `${normalizedBaseSteps[0]} (Baslangic)`,
+    `${normalizedBaseSteps[1]} (Ana tur)`,
+    `${normalizedBaseSteps[2]} (Kapanis)`,
+  ];
+
+  const baseTip = buildDadTip({ ...base, place, material, duration, theme });
+  const modeTip = getModeTip(mode.label);
   return {
     id: `g${idNum}`,
     title: `${rawTitle} • ${mode.label}`,
     duration,
     place,
     material,
-    skill: mode.skill || base.skill,
-    steps: mode.steps(base),
+    skill: base.skill,
+    steps: variationSteps,
     safety: base.safety,
     theme,
-    dad_tip: buildDadTip({ ...base, place, material, duration, theme }),
+    dad_tip: `${baseTip} ${modeTip}`,
     age_variation: buildAgeVariation({ ...base, duration }),
     plan_phase: PLAN_PHASES[idNum % PLAN_PHASES.length],
   };
