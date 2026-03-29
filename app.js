@@ -2,9 +2,9 @@ const baseGames = [
   { id:"g1", title: "Renk Avcıları 🎨", duration: "5", place: "ev", material: "yok", skill: "Dikkat + Dil Gelişimi", steps: ["Oyuna başlamak için baba odadaki etrafta olan bir rengi seçip söyler. Örneğin: 'Kırmızı!'", "Çocuğunuzun hevesle odada o renge sahip tam 3 farklı eşyayı bulup onlara dokunması gerekir.", "Dokunduğu her eşyanın ne olduğunu yüksek sesle söylemelidir (Örn: 'Kırmızı yastık!'). Ardından renk seçme sırası çocuğa geçer."], safety: "Heyecanla koşarken kaymamak için ayağında kaydırmaz çorap olduğundan emin olun." },
   { id:"g2", title: "Yastık Adası 🏝️", duration: "15", place: "ev", material: "var", skill: "Denge + Kaba Motor", steps: ["Odadaki bütün yumuşak yastıkları ve minderleri yere aralıklı olarak dizerek 'adalar' oluşturun.", "Yerdeki boş alanların 'timsahlı su' olduğunu hayal edin. Çocuğunuz sadece yastıklara basarak odanın bir ucundan diğerine geçmeye çalışsın.", "Zorluğu artırmak için adaların arasını biraz daha açabilir veya sekerek gitmesini isteyebilirsiniz."], safety: "Yastıkların zemin üzerinde kayıp düşmeye sebep olmaması için altlarına halı denk gelmesine dikkat edin." },
   { id:"g3", title: "Hayvan Taklidi 🦁", duration: "5", place: "ev", material: "yok", skill: "Hayal Gücü + İfade", steps: ["Baba aklından bir hayvan seçer ve onun çıkardığı sesi, yürüme şeklini taklit etmeye başlar.", "Çocuk gülerek bu hayvanın ne olduğunu tahmin etmeye çalışır.", "Doğru bildiğinde sıra çocuğa geçer; bu sefer o kendi seçtiği hayvanı canlandırır ve baba bulmaya çalışır."], safety: "Maymun veya kurbağa gibi zıplamalı taklitlerde etraftaki eşyalara çarpmamaya özen gösterin." },
-  { id:"g4", title: "Mini Hazine Avı 💎", duration: "15", place: "ev", material: "var", skill: "Problem Çözme + Dinleme", steps: ["Çocuğunuz gözlerini kapatırken, onun çok sevdiği küçük bir oyuncağı veya nesneyi odanın bir yerine saklayın.", "Ona hazineye ulaşması için 3 tane basit ipucu verin (Örn: 'Yumuşak bir şeyin altında', 'Rengi mavi olan bir eşyaya çok yakın').", "Çocuk hazineyi ararken ona 'Sıcak!' (yaklaştın) veya 'Soğuk!' (uzaklaştın) diyerek yönlendirin."], safety: "Hazineyi çocuğun boyunun yetişemeyeceği yerlere saklamayın." },
+  { id:"g4", title: "Küçük Hazine Avı 💎", duration: "15", place: "ev", material: "var", skill: "Problem Çözme + Dinleme", steps: ["Çocuğunuz gözlerini kapatırken, onun çok sevdiği küçük bir oyuncağı veya nesneyi odanın bir yerine saklayın.", "Ona hazineye ulaşması için 3 tane basit ipucu verin (Örn: 'Yumuşak bir şeyin altında', 'Rengi mavi olan bir eşyaya çok yakın').", "Çocuk hazineyi ararken ona 'Sıcak!' (yaklaştın) veya 'Soğuk!' (uzaklaştın) diyerek yönlendirin."], safety: "Hazineyi çocuğun boyunun yetişemeyeceği yerlere saklamayın." },
   { id:"g5", title: "Balon Havada 🎈", duration: "5", place: "ev", material: "var", skill: "El-Göz Koordinasyonu", steps: ["Orta boy bir balonu şişirip bağlayın.", "Balonu havaya fırlatın ve sırayla elinizle hafifçe vurarak yere düşürmemeye çalışın.", "Birlikte saymaya başlayın, hedefiniz balonu yere değdirmeden 10 veya 20 kere havada tutmak olsun!"], safety: "Patlayan balon parçalarını çocuğun ağzına atmaması için anında toplayıp çöpe atın." },
-  { id:"g6", title: "Parkta Çizgi Takip 🛤️", duration: "15", place: "disari", material: "yok", skill: "Denge Odaklanması", steps: ["Dışarıda veya parkta yerde belirgin bir kaldırım taşı çizgisi veya boyalı bir alan bulun.", "Kolları yana açarak bir ip cambazı gibi sadece o çizginin üzerinde yürümeye çalışın.", "Çizginin sonuna ilk düşmeden ulaşan kişiyle kocaman bir çak (high-five) yapın!"], safety: "Güvenli park yollarını seçin." },
+  { id:"g6", title: "Parkta Çizgi Takip 🛤️", duration: "15", place: "disari", material: "yok", skill: "Denge Odaklanması", steps: ["Dışarıda veya parkta yerde belirgin bir kaldırım taşı çizgisi veya boyalı bir alan bulun.", "Kolları yana açarak bir ip cambazı gibi sadece o çizginin üzerinde yürümeye çalışın.", "Çizginin sonuna ilk düşmeden ulaşan kişiyle kocaman bir çak-bes yapın!"], safety: "Güvenli park yollarını seçin." },
   { id:"g7", title: "Ağaç Dedektifi 🌳", duration: "30", place: "disari", material: "yok", skill: "Gözlem + Doğa Sevgisi", steps: ["Parkta dolaşırken yerlerden veya güvenli dallardan 3 tamamen farklı yaprak bulun.", "Yere oturup bu yaprakları yan yana koyun; renkleri, damarları ve şekilleri üzerine sohbet edin.", "Çocuğunuzdan bu yapraklara komik isimler takmasını isteyin (Örn: 'Sivri burun yaprak')."], safety: "Dikenli, zehirli olabilecek yabani bitkilere çıplak elle dokunmamaya özen gösterin." },
   { id:"g8", title: "Top Yuvarlama Yarışı ⚽", duration: "15", place: "disari", material: "var", skill: "Motor Becerileri", steps: ["Çimlerde veya geniş bir alanda başlangıç ve bitiş için iki tane ağaç veya taş belirleyin.", "Yumuşak veya orta boy bir topu sadece ellerinizle iterek (yuvarlayarak) bitiş çizgisine götürmeye yarışın.", "Bir sonraki turda topu sadece ayak içiyle itme kuralı getirerek zorlaştırın."], safety: "Araç yollarından güvenli bir şekilde uzak durarak oynayın." },
   { id:"g9", title: "Sihirli Komut 🎇", duration: "5", place: "ev", material: "yok", skill: "Dinleme + Odaklanma", steps: ["Baba arka arkaya eğlenceli komutlar verir: 'Zıpla!', 'Kendi etrafında dön!', 'Alkışla!'", "Fakat bir kural vardır: Sadece baba cümleye 'Sihirli komut:' diye başlarsa hareket yapılacaktır.", "Baba 'Sihirli komut' demeden 'Zıpla' derse ve çocuk zıplarsa, çocuk yanar ve gülerek sıra ona geçer."], safety: "Çocuğun hızlı hareket ederken kafasını vurmaması için ortamı boşaltın." },
@@ -49,7 +49,7 @@ const baseGames = [
   { id:"g48", title: "Pamuk Püfleme Yarışı ☁️", duration: "5", place: "ev", material: "var", skill: "Nefes Gücü", steps: ["Masaya biraz büyükçe kopardığınız iki top pamuk koyun.", "Çocuğunuzla yan yana durup aynı anda derin bir nefes alarak pamuklara püfleyin.", "Kimin pamuğu masanın ucuna ilk ulaşır veya daha uzağa uçarsa o turu o alkışlayarak kazansın."], safety: "Pamuğun direkt ağza çekilmemesi, sadece karşıya doğru püflenmesi gerektiğine dikkat edin." },
   { id:"g49", title: "Baloncuk Yağmuru Patlatma 🧼", duration: "15", place: "disari", material: "var", skill: "Odak + Refleks", steps: ["Çocuğunuza bir şişe köpük balon çıkarıcı alın (bulaşık deterjanı ve su da iş görür).", "Siz yukarı doğru aralıksız onlarca, yüzlerce baloncuk üfleyerek havayı muhteşem bir şölene çevirin.", "Çocuğunuz işaret parmağıyla balonlar aşağı inmeden hepsini teker teker patlatmaya yetişmeye çalışsın."], safety: "Köpüğün veya deterjan suyunun göze sıçramamasına dikkat edin." },
   { id:"g50", title: "Komik Yürüyüşler Geçidi 🐧", duration: "5", place: "ev", material: "yok", skill: "Yaratıcı Hareket", steps: ["Odanın bir başından diğer başına yapacağınız seyahatin temellerini atın. Her tur farklı yürünecek.", "Deyin ki: 'Şimdi çok mutlu bir penguen gibi yürüyoruz!', sonra 'Şimdi midesi doymuş tontoş bir kedi!'", "Aynı anlarda yürüme tarzını abartın. Özellikle penguen topuklarına basarak ilerlemek çok komik olur."], safety: "Kaygan halılarda sakarlık etmemek için ayağınızda çorap yokken deneyin." },
-  { id:"g51", title: "Uçan Mandal Toplayıcıları 🪶", duration: "15", place: "ev", material: "var", skill: "İnce Motor", steps: ["Odadaki koltuk minderlerinin kenarlarına veya battaniye kenarlarına farklı renklerdeki mandalları sıkıştırın.", "Çocuğunuza 'Bütün kuşlar ormanımıza konmuş!' deyin.", "En kısa sürede parmaklarını sıkıştırıp gevşeterek tüm mandalları toplaması için ufak bir mini yarış başlatın."], safety: "Küçük oyuncak mandallar kullanıyorsanız dikkatli olun, ev tipi büyük mandallar daha iyi olur." },
+  { id:"g51", title: "Uçan Mandal Toplayıcıları 🪶", duration: "15", place: "ev", material: "var", skill: "İnce Motor", steps: ["Odadaki koltuk minderlerinin kenarlarına veya battaniye kenarlarına farklı renklerdeki mandalları sıkıştırın.", "Çocuğunuza 'Bütün kuşlar ormanımıza konmuş!' deyin.", "En kısa sürede parmaklarını sıkıştırıp gevşeterek tüm mandalları toplaması için ufak bir yarış başlatın."], safety: "Küçük oyuncak mandallar kullanıyorsanız dikkatli olun, ev tipi büyük mandallar daha iyi olur." },
   { id:"g52", title: "Sıcak Çorba Üfleme 🍵", duration: "5", place: "ev", material: "yok", skill: "Solunum Nefes Eğitimi", steps: ["İki elinizi kase gibi birleştirin ve 'Ellerimizde aşırı, cayır cayır sıcak dev bir tabak çorba var' deyin.", "Çorbayı dökmemek için minik minik ve ritmik olarak üfleyerek hayali bir şekilde çorbayı soğutun.", "Hızlı üflerseniz 'Eyvah döküldü kollarım yandı!' diyerek komik sesler çıkarın; yavaş nefesi teşvik edin."], safety: "Uzun süre arka arkaya üfleyip oksijen sorunu (baş dönmesi) olmasına müsaade etmeyin." },
   { id:"g53", title: "Sihirli Parmak Yolu 👆", duration: "15", place: "disari", material: "var", skill: "Harita Okuma + Yön", steps: ["Parka çıkmadan önce elinize uzunca dökülmüş kum, toprak veya ıslak asfalt olan düz bir zemin bulun.", "Siz kocaman işaret parmağınızla yere çok kıvrımlı, kavisli garip bir sonsuz yol çizin.", "Çocuğunuzdan sizin çizdiğiniz bu uzun çizgiden işaret parmağını hiç kaldırmadan sonuca getirmesini isteyin."], safety: "Özellikle cam kırığı veya diken bulunmayan yumuşak toprakları seçin." },
   { id:"g54", title: "Kağıt Uçak Havayolları ✈️", duration: "30", place: "ev", material: "var", skill: "Tasarım El Becerisi", steps: ["Evde bulunan birkaç beyaz veya renkli A4 sayfasından birlikte klasik veya farklı çeşit kağıt uçaklar katlayın.", "Uçakları rengarenk boyalarla süsleyip onlara 'Yıldırım', 'Bulut Yıldızı' gibi isimler takın.", "Hemen ardında koridordan sırayla aynı hedefe doğru fırlatın. En uzağa kim fırlattı? Rekor denemeleri!"], safety: "Uçağın sivri burnu çocuğun yüzüne gelebileceği için birbirinize doğru asla atmayın." },
@@ -70,7 +70,7 @@ const baseGames = [
   { id:"g69", title: "Dinozor Kazısı 🦴", duration: "30", place: "ev", material: "var", skill: "Sabır + Keşif", steps: ["Bir kaba un veya kum koyun, içine küçük plastik dinozorları gömün.", "Çocuğunuza bir fırça veya kaşık verin: Arkeolog olarak fosil kazısı yapıyorsun!", "Yavaşça kazarak dinosaurları ortaya çıkarsın ve her birinin adını koysun."], safety: "Un veya kumun göze kaçmaması için dikkatli olun." },
   { id:"g70", title: "Robot Yürüyüşü 🤖", duration: "5", place: "ev", material: "yok", skill: "Vücut Kontrolü", steps: ["Baba Robot Moduna Geç komutu verdiğinde çocuk mekanik hareketlerle yürüsün.", "Sağa dön, Dur, İleri yürü gibi komutlarla robotu yönlendirin.", "İnsan Moduna Geç dediğinizde normal yürüyüşe dönsün. Geçişler çok komik!"], safety: "Robot yürürken dizleri fazla kilitlemesin." },
   { id:"g71", title: "Rüzgar Gülü Yapımı 🌀", duration: "30", place: "ev", material: "var", skill: "El Becerisi + Bilim", steps: ["Kare bir kağıdı köşelerden ortaya doğru kesin ve bir çubuğa yapıştırarak rüzgar gülü yapın.", "Balkona veya pencere kenarına çıkıp rüzgara tutun ve dönmesini izleyin.", "Farklı boyut kağıtlarla hangisinin daha hızlı döndüğünü test edin."], safety: "Makası sadece baba kullansın." },
-  { id:"g72", title: "Yastık Savaşı (Mini) 🎯", duration: "5", place: "ev", material: "var", skill: "Enerji Boşaltma", steps: ["Herkesin eline birer küçük ve yumuşak yastık alın.", "Sadece belden aşağıya vuruş geçerli kuralını koyun.", "3 dakika mini yastık savaşı, sonra birbirinize sarılarak barışın!"], safety: "Çok yumuşak, hafif yastıklar kullanın. Ağır yastıklarla oynamayın." },
+  { id:"g72", title: "Yastık Savaşı (Küçük) 🎯", duration: "5", place: "ev", material: "var", skill: "Enerji Boşaltma", steps: ["Herkesin eline birer küçük ve yumuşak yastık alın.", "Sadece belden aşağıya vuruş geçerli kuralını koyun.", "3 dakika küçük yastık savaşı, sonra birbirinize sarılarak barışın!"], safety: "Çok yumuşak, hafif yastıklar kullanın. Ağır yastıklarla oynamayın." },
   { id:"g73", title: "Posta Kutusu Oyunu 📬", duration: "15", place: "ev", material: "var", skill: "Yazma + İletişim", steps: ["Boş bir kutuyu Posta Kutusu olarak ev içine yerleştirin.", "Küçük kağıtlara birbirinize kısa mesajlar, resimler veya kalpler çizin ve kutuya atın.", "Her 5 dakikada bir Posta geldi! diye bağırıp kutuyu kontrol edin ve mektupları okuyun."], safety: "Kağıtları küçük tutun ama yutulmayacak büyüklükte olsun." },
   { id:"g74", title: "Hayvanat Bahçesi Müdürü 🐘", duration: "30", place: "ev", material: "var", skill: "Organizasyon + Hayal", steps: ["Tüm peluş ve plastik hayvan oyuncaklarını toplayın.", "Halı üzerine bantla alanlar ayırarak hayvanat bahçesi bölümleri oluşturun.", "Çocuğunuz müdür olsun, hayvanları doğru bölümlere yerleştirsin ve babaya tur versin."], safety: "Küçük parçalı oyuncakları çocuğun ağzına götürmemesine dikkat edin." },
   { id:"g75", title: "Gizli Ajan Lazer Parkuru 🔴", duration: "15", place: "ev", material: "var", skill: "Esneklik + Strateji", steps: ["Koridorda duvarlara ip veya yün iplik gererek lazer ışını tuzakları oluşturun.", "Çocuğunuz gizli ajan olarak bu iplere dokunmadan koridorun sonuna ulaşmaya çalışsın.", "İpe her dokunduğunda Alarm çaldı! Tekrar dene! diyerek heyecanı artırın."], safety: "İpleri boğaz hizasından geçirmeyin, diz ve göğüs hizasında tutun." },
@@ -89,7 +89,7 @@ const baseGames = [
   { id:"g88", title: "Sihirli Halı Yolculuğu 🧞", duration: "5", place: "ev", material: "var", skill: "Hayal Gücü + Coğrafya", steps: ["Bir battaniyeyi yere serin. Çocuğunuzla üzerine oturun.", "Bu bir sihirli halı! Nereye gitmek istersin? diye sorun. Afrika, Kutuplar, Ay!", "Gittiğiniz yerdeki hayvanları ve hava durumunu birlikte hayal edip canlandırın."], safety: "Battaniyenin altının kaygan olmamasına dikkat edin." },
   { id:"g89", title: "Terlik Fırlatma Olimpiyatları 🩴", duration: "15", place: "ev", material: "var", skill: "Kaba Motor + Eğlence", steps: ["Koridorun sonuna bir hedef yastık koyun.", "Ayağınızdaki terlikleri bacak sallamasıyla havaya fırlatarak hedefe yakın düşürmeye çalışın.", "Altın madalyayı kazanan baba mı yoksa oğul mu?"], safety: "Etraftaki kırılabilir eşyaları önceden kaldırın." },
   { id:"g90", title: "Pipet Futbolu ⚽", duration: "15", place: "ev", material: "var", skill: "Nefes + Strateji", steps: ["Masanın iki ucuna kitaplarla küçük kale yapın. Ortaya pinpon topu koyun.", "Her iki taraf elinde bir pipetle topu üfleyerek karşı kaleye sokmaya çalışsın.", "İlk 3 golü atan kazanır! Bu oyun çok heyecanlı ve rekabetçidir."], safety: "Pipeti ağızda ısırmamaya ve yutmamaya dikkat edin." },
-  { id:"g91", title: "Müzikli Sandalye (Mini) 🪑", duration: "15", place: "ev", material: "var", skill: "Ritim + Hız", steps: ["Odaya 3-4 yastık veya minder koyun. Telefondan müzik açın.", "Müzik çalarken etrafta dans ederek dolanın. Müzik durduğunda bir mindere oturun.", "Her turda bir minderi kaldırarak heyecanı artırın!"], safety: "Minderlerin arasında yeterli mesafe bırakın." },
+  { id:"g91", title: "Müzikli Sandalye (Küçük) 🪑", duration: "15", place: "ev", material: "var", skill: "Ritim + Hız", steps: ["Odaya 3-4 yastık veya minder koyun. Telefondan müzik açın.", "Müzik çalarken etrafta dans ederek dolanın. Müzik durduğunda bir mindere oturun.", "Her turda bir minderi kaldırarak heyecanı artırın!"], safety: "Minderlerin arasında yeterli mesafe bırakın." },
   { id:"g92", title: "Sırt Sırta Kalkış 💪", duration: "5", place: "ev", material: "yok", skill: "İşbirliği + Güç", steps: ["Çocuğunuzla yerde sırt sırta oturun ve kollarınızı birbirinize kenetleyin.", "Sadece birbirinize dayanarak ve bacak gücü kullanarak birlikte ayağa kalkmaya çalışın.", "Başardığınızda kocaman alkışlayın! Takım çalışmasının gücünü hissedeceksiniz."], safety: "Yavaş ve kontrollü yapın, zorlamayın." },
   { id:"g93", title: "Origami Hayvanlar 🐸", duration: "30", place: "ev", material: "var", skill: "İnce Motor + Geometri", steps: ["Renkli kağıtlarla basit origami modelleri yapın (köpek yüzü, gemi en kolaylarıdır).", "Telefondan basit origami videosu izleyerek adım adım birlikte katlayın.", "Yaptığınız hayvanlara isim verin ve onlarla kısa bir kukla gösterisi yapın."], safety: "Kağıt kenarlarının parmaklara kesmemesi için nazikçe katlayın." },
   { id:"g94", title: "Gözü Kapalı Lezzet Testi 😋", duration: "15", place: "ev", material: "var", skill: "Tat Duyusu + Tahmin", steps: ["Çocuğunuzun gözlerini bir bandana ile bağlayın.", "Ağzına küçük parçalar halinde farklı meyveler koyun (üzüm, elma, muz).", "Sadece tadına bakarak hangi meyve olduğunu tahmin etmeye çalışsın!"], safety: "Alerji riski olan gıdalardan kaçının ve küçük lokmalar verin." },
@@ -124,11 +124,11 @@ const PREMIUM_VARIATION_MODES = [
     steps: (b) => [
       `Bu turda gorev: ${b.title.replace(/\s[-–].*$/, "")}.`,
       "90 saniye boyunca sadece tek kuralla oynayin ve tempoyu cocuk belirlesin.",
-      "Bitiste mini kutlama yapip bir tur daha isteyip istemedigini cocuga sorun.",
+      "Bitiste küçük kutlama yapip bir tur daha isteyip istemedigini cocuga sorun.",
     ],
   },
   {
-    label: "Role Swap",
+    label: "Rol Degisimi",
     duration: "15",
     material: "yok",
     skill: "Liderlik + Sirayla Oynama",
@@ -161,14 +161,14 @@ const PREMIUM_VARIATION_MODES = [
     ],
   },
   {
-    label: "Acik Hava Challenge",
+    label: "Acik Hava Meydan Okumasi",
     duration: "15",
     material: "yok",
     place: "disari",
     skill: "Denge + Doga Farkindaligi",
     steps: () => [
       "Guvenli alanda bir baslangic ve bir bitis noktasi secin.",
-      "Her 20 adimda bir mini gorev (dur, dinle, bul) ekleyin.",
+      "Her 20 adimda bir küçük gorev (dur, dinle, bul) ekleyin.",
       "Kapanista en keyifli anı cocugun anlatmasini isteyin.",
     ],
   },
@@ -179,7 +179,7 @@ const PREMIUM_VARIATION_MODES = [
     skill: "Nefes + Regülasyon",
     steps: () => [
       "Oyunun sonunda birlikte 3 derin nefes alın.",
-      "Bir sonraki oyuna kadar sakin bir mini gorev secin.",
+      "Bir sonraki oyuna kadar sakin bir küçük gorev secin.",
       "Cocuga bugun en sevdigi bolumu sorup gunu kapatin.",
     ],
   },
@@ -187,10 +187,10 @@ const PREMIUM_VARIATION_MODES = [
 
 function getModeTip(label) {
   if (label === "Misyon Karti") return "Kisa tur hedefi koy: once kurali goster, sonra cocuga birak.";
-  if (label === "Role Swap") return "Ilk turu sen yonet, ikinci turda kurali cocuk degistirsin.";
+  if (label === "Rol Degisimi") return "Ilk turu sen yonet, ikinci turda kurali cocuk degistirsin.";
   if (label === "Sessiz Tur") return "Ilk 30 saniye isaret diliyle oynayip odagi arttirin.";
   if (label === "Takim Modu") return "Ayni hedefe birlikte ilerleyin; yarista degil ekipte kalin.";
-  if (label === "Acik Hava Challenge") return "Baslamadan once guvenli siniri birlikte belirleyin.";
+  if (label === "Acik Hava Meydan Okumasi") return "Baslamadan once guvenli siniri birlikte belirleyin.";
   if (label === "Sakin Kapanis") return "Bitiste nefes ve sarilma ile oyunu yumusak kapatin.";
   return "Tempoyu cocuga birakarak oyunu keyifli akista tut.";
 }
@@ -237,7 +237,7 @@ function buildObserverSteps(rawSteps, game) {
       `1. Tur: Baba once bir kez gosterir. ${s2} Cocuk ayni hareketi yapar.`,
       `2. Tur: Baba zorlugu bir adim arttirir ve tempoyu sakin tutar. ${s3} Cocuk tekrar dener.`,
       "Rol Degisimi: Bu turda cocuk bir hamle/hareket secer, baba aynisini yapar.",
-      "Kapanis: Baba 'En cok hangi kisim eglenceliydi?' diye sorar, oyun high-five veya sarilma ile biter.",
+      "Kapanis: Baba 'En cok hangi kisim eglenceliydi?' diye sorar, oyun çak-bes veya sarilma ile biter.",
     ];
   }
 
@@ -246,7 +246,7 @@ function buildObserverSteps(rawSteps, game) {
     `1. Tur: ${s2}`,
     `2. Tur: ${s3}`,
     "Rol Degisimi: Cocuk bir hamle/hareket secer, baba onu taklit eder.",
-    "Kapanis: Oyun sonunda kisa degerlendirme yapip high-five veya sarilma ile bitirin.",
+    "Kapanis: Oyun sonunda kisa degerlendirme yapip çak-bes veya sarilma ile bitirin.",
   ];
 }
 
@@ -295,7 +295,7 @@ function buildDadTip(game) {
   if (theme === "Dil Gelisimi") return "Kisa soru sor, uzun anlatimi cocuga birak.";
   if (game.place === "disari") return "Once guvenli siniri belirle, sonra oyuna gec.";
   if (game.material === "var") return "Malzemeleri bastan hazirla; gecisleri hizlandir.";
-  return "20 saniyelik mini molalarla oyunu akici tut.";
+  return "20 saniyelik küçük molalarla oyunu akici tut.";
 }
 
 function buildAgeVariation(game) {
