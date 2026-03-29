@@ -213,11 +213,33 @@ function stripPhasePrefix(text) {
   return normalizeText(text).replace(/^(Hazirlik|1\. Tur|2\. Tur|Rol Degisimi|Kapanis):\s*/i, "");
 }
 
-function buildObserverSteps(rawSteps) {
+function getGameNumericId(game) {
+  const n = Number(String((game && game.id) || "").replace(/^g/i, ""));
+  return Number.isFinite(n) ? n : 999;
+}
+
+function buildObserverSteps(rawSteps, game) {
+  const existing = (rawSteps || []).map(normalizeText).filter(Boolean);
+  const expectedPrefixes = ["Hazirlik:", "1. Tur:", "2. Tur:", "Rol Degisimi:", "Kapanis:"];
+  const isAlreadyObserver =
+    existing.length >= 5 && expectedPrefixes.every((p, i) => existing[i] && existing[i].startsWith(p));
+  if (isAlreadyObserver) return existing.slice(0, 5).map(ensureSentence);
+
   const base = (rawSteps || []).map(stripPhasePrefix).filter(Boolean);
   const s1 = ensureSentence(base[0] || "Baba oyunun alanini ve tek kurali belirler.");
   const s2 = ensureSentence(base[1] || "Baba ilk turu gosterir, cocuk aynisini uygular.");
   const s3 = ensureSentence(base[2] || "Ikinci turda ayni oyun bir tik farkli tekrar edilir.");
+
+  const isEditorialFirst50 = getGameNumericId(game) <= 50;
+  if (isEditorialFirst50) {
+    return [
+      `Hazirlik: Baba oyunu kurar ve tek cümleyle anlatir. ${s1} Cocuk baslangic noktasina gecer ve oyuna hazir olur.`,
+      `1. Tur: Baba once bir kez gosterir. ${s2} Cocuk ayni hareketi yapar.`,
+      `2. Tur: Baba zorlugu bir adim arttirir ve tempoyu sakin tutar. ${s3} Cocuk tekrar dener.`,
+      "Rol Degisimi: Bu turda cocuk bir hamle/hareket secer, baba aynisini yapar.",
+      "Kapanis: Baba 'En cok hangi kisim eglenceliydi?' diye sorar, oyun high-five veya sarilma ile biter.",
+    ];
+  }
 
   return [
     `Hazirlik: ${s1}`,
@@ -287,7 +309,7 @@ function enrichGame(game, idx) {
     ...game,
     title: normalizeText(game.title),
     safety: normalizeText(game.safety),
-    steps: normalizeSteps(game.steps),
+    steps: buildObserverSteps(game.steps, game),
     theme: game.theme || inferTheme(game),
     dad_tip: game.dad_tip || buildDadTip(game),
     age_variation: game.age_variation || buildAgeVariation(game),
@@ -304,7 +326,7 @@ function createPremiumVariation(base, idNum) {
   const material = mode.material || (idNum % 2 === 0 ? "yok" : "var");
   const theme = inferTheme(base);
   const rawTitle = base.title.replace(/\s[-–].*$/, "");
-  const variationSteps = buildObserverSteps(base.steps).map((step, index) => {
+  const variationSteps = buildObserverSteps(base.steps, { id: `g${idNum}` }).map((step, index) => {
     if (index === 3) return `${step} (${mode.label} modu)`;
     return step;
   });
@@ -337,7 +359,7 @@ function auditAndPolishGames(catalog) {
 
     const safeSteps = Array.isArray(g.steps) && g.steps.length >= 5
       ? g.steps.slice(0, 5).map(ensureSentence)
-      : buildObserverSteps(g.steps);
+      : buildObserverSteps(g.steps, g);
 
     const safety = g.safety.endsWith(".") ? g.safety : `${g.safety}.`;
 
