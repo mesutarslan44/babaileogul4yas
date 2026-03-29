@@ -203,6 +203,31 @@ function normalizeText(value) {
     .trim();
 }
 
+function ensureSentence(text) {
+  const clean = normalizeText(text);
+  if (!clean) return "";
+  return /[.!?]$/.test(clean) ? clean : `${clean}.`;
+}
+
+function stripPhasePrefix(text) {
+  return normalizeText(text).replace(/^(Hazirlik|1\. Tur|2\. Tur|Rol Degisimi|Kapanis):\s*/i, "");
+}
+
+function buildObserverSteps(rawSteps) {
+  const base = (rawSteps || []).map(stripPhasePrefix).filter(Boolean);
+  const s1 = ensureSentence(base[0] || "Baba oyunun alanini ve tek kurali belirler.");
+  const s2 = ensureSentence(base[1] || "Baba ilk turu gosterir, cocuk aynisini uygular.");
+  const s3 = ensureSentence(base[2] || "Ikinci turda ayni oyun bir tik farkli tekrar edilir.");
+
+  return [
+    `Hazirlik: ${s1}`,
+    `1. Tur: ${s2}`,
+    `2. Tur: ${s3}`,
+    "Rol Degisimi: Cocuk bir hamle/hareket secer, baba onu taklit eder.",
+    "Kapanis: Oyun sonunda kisa degerlendirme yapip high-five veya sarilma ile bitirin.",
+  ];
+}
+
 function inferFatherRole(game) {
   const title = String(game.title || "").toLowerCase();
   if (title.includes("saklamba") || title.includes("hazine") || title.includes("define")) {
@@ -226,14 +251,7 @@ function inferChildRole(game) {
 }
 
 function normalizeSteps(steps) {
-  const fallback = [
-    "Baba kurali tek cumleyle soyler ve ilk denemeyi gosterir.",
-    "Cocuk 1-2 dakika oyunu uygular; baba sadece kisa yonlendirme yapar.",
-    "Tur sonunda birlikte kutlama yapip bir tur daha ya da yeni oyun secilir.",
-  ];
-  const safe = (steps || []).map(normalizeText).filter(Boolean);
-  while (safe.length < 3) safe.push(fallback[safe.length]);
-  return safe.slice(0, 3);
+  return buildObserverSteps(steps);
 }
 
 function inferTheme(game) {
@@ -286,12 +304,10 @@ function createPremiumVariation(base, idNum) {
   const material = mode.material || (idNum % 2 === 0 ? "yok" : "var");
   const theme = inferTheme(base);
   const rawTitle = base.title.replace(/\s[-–].*$/, "");
-  const normalizedBaseSteps = normalizeSteps(base.steps);
-  const variationSteps = [
-    `${normalizedBaseSteps[0]} (Baslangic)`,
-    `${normalizedBaseSteps[1]} (Ana tur)`,
-    `${normalizedBaseSteps[2]} (Kapanis)`,
-  ];
+  const variationSteps = buildObserverSteps(base.steps).map((step, index) => {
+    if (index === 3) return `${step} (${mode.label} modu)`;
+    return step;
+  });
 
   const baseTip = buildDadTip({ ...base, place, material, duration, theme });
   const modeTip = getModeTip(mode.label);
@@ -319,11 +335,9 @@ function auditAndPolishGames(catalog) {
     if (usedTitles.has(title)) title = `${title} #${idx + 1}`;
     usedTitles.add(title);
 
-    const safeSteps = g.steps.length === 3 ? g.steps : [
-      g.steps[0] || "Oyunu tanit ve kurali birlikte belirleyin.",
-      g.steps[1] || "Kisa bir tur oynayip rolu degistirin.",
-      g.steps[2] || "Bitiste kutlama yapip oyunu kapatin.",
-    ];
+    const safeSteps = Array.isArray(g.steps) && g.steps.length >= 5
+      ? g.steps.slice(0, 5).map(ensureSentence)
+      : buildObserverSteps(g.steps);
 
     const safety = g.safety.endsWith(".") ? g.safety : `${g.safety}.`;
 

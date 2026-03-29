@@ -381,12 +381,12 @@ ol {
 }
 
 ol li {
-  position: relative;
-  padding-left: 44px;
-  font-size: 17px;
-  font-weight: 600;
-  line-height: 1.6;
-  color: #374151;
+    position: relative;
+    padding-left: 44px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.55;
+    color: #374151;
 }
 
 ol li::before {
