@@ -230,8 +230,8 @@ function buildObserverSteps(rawSteps, game) {
   const s2 = ensureSentence(base[1] || "Baba ilk turu gosterir, cocuk aynisini uygular.");
   const s3 = ensureSentence(base[2] || "Ikinci turda ayni oyun bir tik farkli tekrar edilir.");
 
-  const isEditorialFirst50 = getGameNumericId(game) <= 50;
-  if (isEditorialFirst50) {
+  const isEditorialFirst100 = getGameNumericId(game) <= 100;
+  if (isEditorialFirst100) {
     return [
       `Hazirlik: Baba oyunu kurar ve tek cümleyle anlatir. ${s1} Cocuk baslangic noktasina gecer ve oyuna hazir olur.`,
       `1. Tur: Baba once bir kez gosterir. ${s2} Cocuk ayni hareketi yapar.`,
